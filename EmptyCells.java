@@ -9,6 +9,6 @@ public class EmptyCells extends Cell {
     }
     @Override
     public void tick() {
-        //TODO
+        // Empty
     }
 }
