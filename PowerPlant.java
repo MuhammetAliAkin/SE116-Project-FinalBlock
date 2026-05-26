@@ -1,6 +1,15 @@
 public class PowerPlant extends Cell {
+    private int electricitySupply;
     public PowerPlant(int x, int y) {
         super(x, y, 'P');
+    }
+
+    public int getElectricitySupply() {
+        return electricitySupply;
+    }
+
+    public void setElectricitySupply(int electricitySupply) {
+        this.electricitySupply = electricitySupply;
     }
 
     @Override
@@ -9,6 +18,6 @@ public class PowerPlant extends Cell {
     }
     @Override
     public void tick() {
-        //TODO
+        electricitySupply = 100;
     }
 }

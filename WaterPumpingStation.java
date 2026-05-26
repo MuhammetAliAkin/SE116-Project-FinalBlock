@@ -1,6 +1,15 @@
 public class WaterPumpingStation extends Cell {
+    private int waterSupply;
     public WaterPumpingStation(int x, int y) {
         super(x, y, 'W');
+    }
+
+    public int getWaterSupply() {
+        return waterSupply;
+    }
+
+    public void setWaterSupply(int waterSupply) {
+        this.waterSupply = waterSupply;
     }
 
     @Override
@@ -9,6 +18,6 @@ public class WaterPumpingStation extends Cell {
     }
     @Override
     public void tick() {
-        //TODO
+        waterSupply = 100;
     }
 }

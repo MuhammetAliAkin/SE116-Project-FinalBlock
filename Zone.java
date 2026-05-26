@@ -13,7 +13,7 @@ public abstract class Zone extends Cell {
 
     @Override
     public void tick() {
-        if ((electricityReceived == 0) || (waterReceived == 0) || (internetReceived == 0)){
+        if (electricityReceived == 0 || waterReceived == 0 || (type != 'I' && internetReceived == 0)){
             level = 0;
             return;
         }
