@@ -44,7 +44,7 @@ public class InfrastructureManager {
         colQueue[rear] = startCol;
         rear++;
 
-        while (front < rear) {
+        while (front < rear && remainingCapacity > 0) {
             int currentRow = rowQueue[front];
             int currentCol = colQueue[front];
             front++;
@@ -52,13 +52,14 @@ public class InfrastructureManager {
             Cell currentCell = grid[currentRow][currentCol];
             if (currentCell instanceof Zone) {
                 int demand = getDemandForResource(currentCell, resourceType);
-                int usedAmount = Math.min(demand, remainingCapacity);
-                applyResourceToZone(currentCell, resourceType, usedAmount);
+                if (demand > 0) {
+                    int usedAmount = Math.min(demand, remainingCapacity);
+                    applyResourceToZone(currentCell, resourceType, usedAmount);
+                    remainingCapacity -= usedAmount;
 
-                remainingCapacity -= usedAmount;
-
-                if (remainingCapacity == 0) {
-                    break;
+                    if (remainingCapacity <= 0) {
+                        break;
+                    }
                 }
             }
 
