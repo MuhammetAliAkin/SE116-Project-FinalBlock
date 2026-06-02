@@ -8,7 +8,6 @@ public class InfrastructureManager {
 
 
     public void distributeInfrastructure(Cell[][] grid) {
-        // This will scan the grid and start BFS from each utility source later.
         if (grid == null) {
             return;
         }
@@ -172,7 +171,6 @@ public class InfrastructureManager {
 
 
     private boolean isSourceCell(Cell cell) {
-        // This checks if the cell is a utility provider for infrastructure.
         if (cell == null) {
             return false;
         }
