@@ -1,6 +1,8 @@
 public class WaterPumpingStation extends Cell {
-    private int waterSupply;
+    private static final int DEFAULT_SUPPLY = 100;
+    private int waterSupply = DEFAULT_SUPPLY;
     public WaterPumpingStation(int x, int y) {
+
         super(x, y, 'W');
     }
 
@@ -18,6 +20,7 @@ public class WaterPumpingStation extends Cell {
     }
     @Override
     public void tick() {
-        waterSupply = 100;
+
+        waterSupply = DEFAULT_SUPPLY;
     }
 }
