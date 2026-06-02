@@ -93,6 +93,7 @@ public class InfrastructureManager {
         return zone.getUtilityDemand();
     }
 
+
     private void applyResourceToZone(Cell cell, char resourceType, int amount) {
         if (!(cell instanceof Zone)) {
             return;
@@ -113,40 +114,8 @@ public class InfrastructureManager {
         if (cell == null) {
             return false;
         }
+        return cell instanceof Road || cell instanceof Zone;
 
-        if (cell instanceof EmptyCells) {
-            return false;
-        }
-
-        if (cell instanceof Road) {
-            return true;
-        }
-
-        if (cell instanceof Housing) {
-            return true;
-        }
-
-        if (cell instanceof Industrial) {
-            return true;
-        }
-
-        if (cell instanceof Commercial) {
-            return true;
-        }
-
-        if (cell instanceof PowerPlant) {
-            return true;
-        }
-
-        if (cell instanceof WaterPumpingStation) {
-            return true;
-        }
-
-        if (cell instanceof InternetHub) {
-            return true;
-        }
-
-        return false;
     }
     private int getSourceCapacity(Cell sourceCell) {
         if (sourceCell instanceof PowerPlant) {
