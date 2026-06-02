@@ -18,14 +18,13 @@ public class InfrastructureManager {
                 Cell currentCell = grid[row][col];
 
                 if (isSourceCell(currentCell)) {
-                    char resourceType = currentCell.getType();
-                    runBfsFromSource(grid, row, col, resourceType);
+                    runBfsFromSource(grid, row, col, currentCell);
                 }
             }
         }
     }
 
-    private void runBfsFromSource(Cell[][] grid, int startRow, int startCol, char resourceType) {
+    private void runBfsFromSource(Cell[][] grid, int startRow, int startCol, Cell sourceCell) {
         if (!isValidCoordinate(grid, startRow, startCol)) {
             return;
         }
@@ -35,8 +34,10 @@ public class InfrastructureManager {
         int[] colQueue = new int[totalCells];
         int front = 0;
         int rear = 0;
-        int remainingCapacity = 100;
+        int remainingCapacity = getSourceCapacity(sourceCell);
+        char resourceType = sourceCell.getType();
         boolean[][] visited = createVisitedArray(grid);
+
 
         visited[startRow][startCol] = true;
         rowQueue[rear] = startRow;
@@ -142,6 +143,22 @@ public class InfrastructureManager {
 
         return false;
     }
+    private int getSourceCapacity(Cell sourceCell) {
+        if (sourceCell instanceof PowerPlant) {
+            return ((PowerPlant) sourceCell).getElectricitySupply();
+        }
+
+        if (sourceCell instanceof WaterPumpingStation) {
+            return ((WaterPumpingStation) sourceCell).getWaterSupply();
+        }
+
+        if (sourceCell instanceof InternetHub) {
+            return ((InternetHub) sourceCell).getInternetSupply();
+        }
+
+        return 0;
+    }
+
     private boolean[][] createVisitedArray(Cell[][] grid) {
         boolean[][] visited = new boolean[grid.length][];
         for (int row = 0; row < grid.length; row++) {
