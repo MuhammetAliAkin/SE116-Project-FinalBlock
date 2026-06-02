@@ -1,7 +1,10 @@
 public class InternetHub extends Cell {
+    private static final int DEFAULT_SUPPLY = 100;
     private int internetSupply;
     public InternetHub(int x, int y) {
+
         super(x, y, 'T');
+        internetSupply = DEFAULT_SUPPLY;
     }
 
     public int getInternetSupply() {
@@ -18,6 +21,7 @@ public class InternetHub extends Cell {
     }
     @Override
     public void tick() {
-        internetSupply = 100;
+
+        internetSupply = DEFAULT_SUPPLY;
     }
 }

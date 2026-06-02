@@ -1,7 +1,9 @@
 public class PowerPlant extends Cell {
+   private static final int DEFAULT_SUPPLY = 100;
     private int electricitySupply;
     public PowerPlant(int x, int y) {
         super(x, y, 'P');
+        electricitySupply = DEFAULT_SUPPLY;
     }
 
     public int getElectricitySupply() {
@@ -18,6 +20,7 @@ public class PowerPlant extends Cell {
     }
     @Override
     public void tick() {
-        electricitySupply = 100;
+
+        electricitySupply = DEFAULT_SUPPLY;
     }
 }
