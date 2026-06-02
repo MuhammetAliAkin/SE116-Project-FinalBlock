@@ -85,6 +85,11 @@ public class InfrastructureManager {
         }
 
         Zone zone = (Zone) cell;
+
+        if (resourceType == 'T' && zone instanceof Industrial) {
+            return 0;
+        }
+
         return zone.getUtilityDemand();
     }
 
