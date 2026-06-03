@@ -8,7 +8,6 @@ public class InfrastructureManager {
 
 
     public void distributeInfrastructure(Cell[][] grid) {
-        // This will scan the grid and start BFS from each utility source later.
         if (grid == null) {
             return;
         }
@@ -44,7 +43,7 @@ public class InfrastructureManager {
         colQueue[rear] = startCol;
         rear++;
 
-        while (front < rear) {
+        while (front < rear && remainingCapacity > 0) {
             int currentRow = rowQueue[front];
             int currentCol = colQueue[front];
             front++;
@@ -52,13 +51,14 @@ public class InfrastructureManager {
             Cell currentCell = grid[currentRow][currentCol];
             if (currentCell instanceof Zone) {
                 int demand = getDemandForResource(currentCell, resourceType);
-                int usedAmount = Math.min(demand, remainingCapacity);
-                applyResourceToZone(currentCell, resourceType, usedAmount);
+                if (demand > 0) {
+                    int usedAmount = Math.min(demand, remainingCapacity);
+                    applyResourceToZone(currentCell, resourceType, usedAmount);
+                    remainingCapacity -= usedAmount;
 
-                remainingCapacity -= usedAmount;
-
-                if (remainingCapacity == 0) {
-                    break;
+                    if (remainingCapacity <= 0) {
+                        break;
+                    }
                 }
             }
 
@@ -93,6 +93,7 @@ public class InfrastructureManager {
         return zone.getUtilityDemand();
     }
 
+
     private void applyResourceToZone(Cell cell, char resourceType, int amount) {
         if (!(cell instanceof Zone)) {
             return;
@@ -113,40 +114,8 @@ public class InfrastructureManager {
         if (cell == null) {
             return false;
         }
+        return cell instanceof Road || cell instanceof Zone;
 
-        if (cell instanceof EmptyCells) {
-            return false;
-        }
-
-        if (cell instanceof Road) {
-            return true;
-        }
-
-        if (cell instanceof Housing) {
-            return true;
-        }
-
-        if (cell instanceof Industrial) {
-            return true;
-        }
-
-        if (cell instanceof Commercial) {
-            return true;
-        }
-
-        if (cell instanceof PowerPlant) {
-            return true;
-        }
-
-        if (cell instanceof WaterPumpingStation) {
-            return true;
-        }
-
-        if (cell instanceof InternetHub) {
-            return true;
-        }
-
-        return false;
     }
     private int getSourceCapacity(Cell sourceCell) {
         if (sourceCell instanceof PowerPlant) {
@@ -202,7 +171,6 @@ public class InfrastructureManager {
 
 
     private boolean isSourceCell(Cell cell) {
-        // This checks if the cell is a utility provider for infrastructure.
         if (cell == null) {
             return false;
         }
