@@ -1,3 +1,5 @@
+package objectville.model;
+
 public abstract class Zone extends Cell {
     protected int level;
     protected boolean hasSecurity;

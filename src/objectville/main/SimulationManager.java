@@ -1,3 +1,9 @@
+package objectville.main;
+
+import objectville.engine.InfrastructureManager;
+import objectville.engine.ServiceEngine;
+import objectville.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,3 +1,5 @@
+package objectville.model;
+
 public class PowerPlant extends Cell {
    private static final int DEFAULT_SUPPLY = 100;
     private int electricitySupply;

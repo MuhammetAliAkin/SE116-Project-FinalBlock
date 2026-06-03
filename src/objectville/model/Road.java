@@ -1,3 +1,5 @@
+package objectville.model;
+
 public class Road extends Cell {
     private int electricityReceived;
     private int waterReceived;

@@ -1,19 +1,22 @@
-public class Housing extends Zone {
-    private int lifestyleReceived;
-    public Housing(int x, int y) {
-        super(x, y, 'H');
+package objectville.model;
+
+public class Industrial extends Zone {
+    private int populationReceived;
+    public Industrial(int x, int y) {
+        super(x, y, 'I');
     }
+
     @Override
     public char getType() {
-        return 'H';
+        return 'I';
     }
 
-    public int getLifestyleReceived() {
-        return lifestyleReceived;
+    public int getPopulationReceived() {
+        return populationReceived;
     }
 
-    public void setLifestyleReceived(int lifestyleReceived) {
-        this.lifestyleReceived = lifestyleReceived;
+    public void setPopulationReceived(int populationReceived) {
+        this.populationReceived = populationReceived;
     }
 
     public int getCurrentOutput() {
@@ -25,7 +28,7 @@ public class Housing extends Zone {
             case 2:
                 return getM()*2;
             case 3:
-                return getM()*2 + lifestyleReceived;
+                return (getM()*2) + populationReceived;
             default:
                 throw new IllegalStateException("Error: Invalid zone level: " + level);
         }
@@ -36,10 +39,15 @@ public class Housing extends Zone {
     }
     @Override
     public boolean canUpgradeToLevel3() {
-        return (lifestyleReceived > 0);
+        return (populationReceived > 0);
     }
     @Override
     public void resetPool() {
-        lifestyleReceived = 0;
+        populationReceived = 0;
+    }
+
+    @Override
+    public int getM() {
+        return Math.min(electricityReceived, waterReceived);
     }
 }

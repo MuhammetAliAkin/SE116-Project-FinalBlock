@@ -1,3 +1,7 @@
+package objectville.engine;
+
+import objectville.model.*;
+
 public class InfrastructureManager {
     private static final int[][] DIRECTIONS = {
             {-1, 0},

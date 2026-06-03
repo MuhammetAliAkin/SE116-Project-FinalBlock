@@ -1,3 +1,5 @@
+package objectville.model;
+
 public class Hospital extends Cell {
     public Hospital(int x, int y) {
         super(x, y, 'D');

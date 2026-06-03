@@ -1,3 +1,8 @@
+package objectville.engine;
+
+import objectville.model.Cell;
+import objectville.model.Zone;
+
 public class ServiceEngine {
     public void updateServices(Cell[][] grid){
         for (int row = 0; row < grid.length; row++) {

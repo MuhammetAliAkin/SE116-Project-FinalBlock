@@ -1,3 +1,5 @@
+package objectville.model;
+
 public abstract class Cell {
     protected int x;
     protected int y;

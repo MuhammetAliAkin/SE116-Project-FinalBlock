@@ -1,3 +1,5 @@
+package objectville.model;
+
 public class Commercial extends Zone {
     private int populationReceived;
     private int goodsReceived;

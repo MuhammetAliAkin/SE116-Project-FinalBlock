@@ -1,3 +1,8 @@
+package objectville.main;
+
+import objectville.io.MapReader;
+import objectville.model.Cell;
+
 public class ObjectvilleGame {
     public static void main(String[] args) {
         if (args.length < 2) {
