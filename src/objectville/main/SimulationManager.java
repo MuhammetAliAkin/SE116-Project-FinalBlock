@@ -30,13 +30,37 @@ public class SimulationManager {
     }
 
     private void executeTick() {
-        forEachZone(z -> z.resetServices());
+        forEachZone(z -> {
+            int oldLevel = z.getLevel();
+            z.tick();
+            int newLevel = z.getLevel();
+
+            String className = z.getClass().getSimpleName();
+            if (className.equals("Housing")) {
+                className = "House";
+            }
+            int output = z.getCurrentOutput();
+            if (output > 0) {
+                String resourceName = "";
+                if (z instanceof Housing) {
+                    resourceName = "population";
+                } else if (z instanceof Industrial) {
+                    resourceName = "goods";
+                } else if (z instanceof Commercial) {
+                    resourceName = "lifestyle";
+                }
+                System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") generated " + output + " " + resourceName);
+            }
+            if (newLevel > oldLevel) {
+                System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") levels up from " + oldLevel + " to " + newLevel);
+            } else if (newLevel < oldLevel) {
+                System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") levels down from " + oldLevel + " to " + newLevel);
+            }
+        });
         serviceEngine.updateServices(grid);
-        // Step 2: Utilities
         forEachZone(z -> z.resetUtilities());
         forEachCell(c -> { if (c instanceof PowerPlant || c instanceof WaterPumpingStation || c instanceof InternetHub) c.tick(); });
         infraManager.distributeInfrastructure(grid);
-// Step 3: Distribute last tick's resources
         distributeResources();
 
         forEachZone(z -> {
@@ -54,8 +78,6 @@ public class SimulationManager {
                         + ") levels up from " + oldLevel + " to " + newLevel);
             }
         });
-
-// Step 5: Accumulate new production
         pooledPopulation = sumOutput(Housing.class);
         pooledGoods      = sumOutput(Industrial.class);
         pooledLifestyle  = sumOutput(Commercial.class);
@@ -70,14 +92,26 @@ public class SimulationManager {
 
         int workerZones = ind.size() + com.size();
         int popPerZone  = workerZones > 0 ? pooledPopulation / workerZones : 0;
-        ind.forEach(z -> z.setPopulationReceived(popPerZone));
-        com.forEach(z -> z.setPopulationReceived(popPerZone));
+        ind.forEach(z -> {
+            z.setPopulationReceived(popPerZone);
+            if(popPerZone > 0) System.out.println("Industrial at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
+        });
+        com.forEach(z ->{
+            z.setPopulationReceived(popPerZone);
+            if(popPerZone > 0) System.out.println("Commercial at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
+        });
 
         int goodsPerCom = com.size() > 0 ? pooledGoods / com.size() : 0;
-        com.forEach(z -> z.setGoodsReceived(goodsPerCom));
+        com.forEach(z -> {
+            z.setGoodsReceived(goodsPerCom);
+            if(goodsPerCom > 0) System.out.println("Commercial at (" + z.getX() + "," + z.getY() + ") received " + goodsPerCom + " goods");
+        });
 
         int lifestylePerHou = hou.size() > 0 ? pooledLifestyle / hou.size() : 0;
-        hou.forEach(z -> z.setLifestyleReceived(lifestylePerHou));
+        hou.forEach(z -> {
+            z.setLifestyleReceived(lifestylePerHou);
+            if(lifestylePerHou > 0) System.out.println("House at (" + z.getX() + "," + z.getY() + ") received " + lifestylePerHou + " lifestyle");
+        });
     }
 
 
