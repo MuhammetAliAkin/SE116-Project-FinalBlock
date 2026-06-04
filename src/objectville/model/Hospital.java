@@ -1,6 +1,6 @@
 package objectville.model;
 
-public class Hospital extends Cell {
+public class Hospital extends Cell implements ServiceProvider {
     public Hospital(int x, int y) {
         super(x, y, 'D');
     }
@@ -10,7 +10,13 @@ public class Hospital extends Cell {
         return 'D';
     }
     @Override
-    public void tick() {
-        //TODO
+    public void tick() {}
+    @Override
+    public String getServiceType() {
+        return "Health";
+    }
+    @Override
+    public int getRadius() {
+        return 3;
     }
 }

@@ -49,4 +49,7 @@ public class Housing extends Zone {
     public boolean hasRequiredServices() {
         return hasSecurity  && hasHealth && hasEducation;
     }
+    public String getSimpleName(){
+        return "House";
+    }
 }

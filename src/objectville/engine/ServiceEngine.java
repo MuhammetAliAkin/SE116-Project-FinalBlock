@@ -1,19 +1,15 @@
 package objectville.engine;
 
 import objectville.model.Cell;
+import objectville.model.ServiceProvider;
 import objectville.model.Zone;
 
 public class ServiceEngine {
     public void updateServices(Cell[][] grid){
         for (int row = 0; row < grid.length; row++) {
             for (int column = 0; column < grid[row].length; column++) {
-                char gridType = grid[row][column].getType();
-                if (gridType == 'F'){
-                    applyServiceRange(grid,row,column,5,"Security");
-                }else if (gridType == 'D'){
-                    applyServiceRange(grid,row,column,3,"Health");
-                }else if (gridType == 'S'){
-                    applyServiceRange(grid,row,column,4,"Education");
+                if(grid[row][column] instanceof ServiceProvider provider){
+                    applyServiceRange(grid,row,column,provider.getRadius(),provider.getServiceType());
                 }
             }
         }

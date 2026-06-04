@@ -1,6 +1,6 @@
 package objectville.model;
 
-public class PoliceStation extends Cell {
+public class PoliceStation extends Cell implements ServiceProvider {
     public PoliceStation(int x, int y) {
         super(x, y, 'F');
     }
@@ -10,7 +10,15 @@ public class PoliceStation extends Cell {
         return 'F';
     }
     @Override
-    public void tick() {
-        //TODO
+    public void tick() {}
+
+    @Override
+    public int getRadius() {
+        return 5;
+    }
+
+    @Override
+    public String getServiceType() {
+        return "Security";
     }
 }
