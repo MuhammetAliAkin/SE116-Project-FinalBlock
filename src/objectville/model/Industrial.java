@@ -35,7 +35,7 @@ public class Industrial extends Zone {
     }
     @Override
     public int getUtilityDemand() {
-        return Math.max(1,getCurrentOutput());
+        return Math.max(1,previousOutput);
     }
     @Override
     public boolean canUpgradeToLevel3() {

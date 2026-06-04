@@ -46,7 +46,7 @@ public class Commercial extends Zone {
 
     @Override
     public int getUtilityDemand() {
-        return Math.max(1,getCurrentOutput());
+        return Math.max(1,previousOutput);
     }
 
     @Override

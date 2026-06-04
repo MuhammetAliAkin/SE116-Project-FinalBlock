@@ -8,6 +8,7 @@ public abstract class   Zone extends Cell {
     protected int electricityReceived;
     protected int waterReceived;
     protected int internetReceived;
+    protected int previousOutput = 0;
     public Zone(int x, int y, char type) {
         super(x, y, type);
         level = 0;
@@ -120,4 +121,7 @@ public abstract class   Zone extends Cell {
         this.internetReceived = internetReceived;
     }
     public abstract boolean hasRequiredServices();
+    public void saveOutputForNextTick() {
+        this.previousOutput = getCurrentOutput();
+    }
 }

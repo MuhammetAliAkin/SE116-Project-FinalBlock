@@ -59,7 +59,7 @@ public class SimulationManager {
         pooledPopulation = sumOutput(Housing.class);
         pooledGoods      = sumOutput(Industrial.class);
         pooledLifestyle  = sumOutput(Commercial.class);
-
+        forEachZone(z -> z.saveOutputForNextTick());
         forEachZone(z -> z.resetPool());
     }
 
