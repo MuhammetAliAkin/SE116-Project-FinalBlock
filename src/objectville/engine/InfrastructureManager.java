@@ -104,13 +104,19 @@ public class InfrastructureManager {
         }
 
         Zone zone = (Zone) cell;
-
+        String className = zone.getClass().getSimpleName();
+        if (className.equals("Housing")) {
+            className = "House";
+        }
         if (resourceType == 'P') {
             zone.receiveElectricity(amount);
+            System.out.println(className + " at (" + zone.getX() + "," + zone.getY() + ") received " + amount + " electricity");
         } else if (resourceType == 'W') {
             zone.receiveWater(amount);
+            System.out.println(className + " at (" + zone.getX() + "," + zone.getY() + ") received " + amount + " water");
         } else if (resourceType == 'T') {
             zone.receiveInternet(amount);
+            System.out.println(className + " at (" + zone.getX() + "," + zone.getY() + ") received " + amount + " internet");
         }
     }
 

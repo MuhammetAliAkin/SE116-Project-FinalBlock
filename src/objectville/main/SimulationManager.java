@@ -23,14 +23,13 @@ public class SimulationManager {
 
     public void run(int totalTicks) {
         for (int tick = 1; tick <= totalTicks; tick++) {
-            System.out.println("=== Tick " + tick + " ===");
+            System.out.println("Tick " + tick);
             executeTick();
             printGrid(tick);
         }
     }
 
     private void executeTick() {
-// Step 1: Services
         forEachZone(z -> z.resetServices());
         serviceEngine.updateServices(grid);
         // Step 2: Utilities
@@ -40,8 +39,21 @@ public class SimulationManager {
 // Step 3: Distribute last tick's resources
         distributeResources();
 
-        // Step 4: Update zone levels
-        forEachZone(z -> z.tick());
+        forEachZone(z -> {
+            int oldLevel = z.getLevel();
+            z.tick();
+            int newLevel = z.getLevel();
+
+            if (newLevel != oldLevel) {
+                String className = z.getClass().getSimpleName();
+                if (className.equals("Housing")) {
+                    className = "House";
+                }
+
+                System.out.println(className + " at (" + z.getX() + "," + z.getY()
+                        + ") levels up from " + oldLevel + " to " + newLevel);
+            }
+        });
 
 // Step 5: Accumulate new production
         pooledPopulation = sumOutput(Housing.class);
@@ -90,7 +102,30 @@ public class SimulationManager {
         int total = 0;
         for (Cell[] row : grid)
             for (Cell c : row)
-                if (type.isInstance(c)) total += type.cast(c).getCurrentOutput();
+                if (type.isInstance(c)) {
+                    T zone = type.cast(c);
+                    int output = zone.getCurrentOutput();
+                    total += output;
+
+                    if (output > 0) {
+                        String className = zone.getClass().getSimpleName();
+                        if (className.equals("Housing")) {
+                            className = "House";
+                        }
+
+                        String resourceName = "";
+                        if (zone instanceof Housing) {
+                            resourceName = "population";
+                        } else if (zone instanceof Industrial) {
+                            resourceName = "goods";
+                        } else if (zone instanceof Commercial) {
+                            resourceName = "lifestyle";
+                        }
+
+                        System.out.println(className + " at (" + zone.getX() + "," + zone.getY()
+                                + ") generated " + output + " " + resourceName);
+                    }
+                }
         return total;
     }
 

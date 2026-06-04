@@ -12,5 +12,21 @@ public abstract class Cell {
     }
     public abstract char getType();
     public abstract void tick();
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }
 
