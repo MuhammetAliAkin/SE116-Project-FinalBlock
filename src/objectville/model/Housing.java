@@ -44,4 +44,9 @@ public class Housing extends Zone {
     public void resetPool() {
         lifestyleReceived = 0;
     }
+
+    @Override
+    public boolean hasRequiredServices() {
+        return hasSecurity  && hasHealth && hasEducation;
+    }
 }

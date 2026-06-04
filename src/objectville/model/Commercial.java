@@ -59,4 +59,9 @@ public class Commercial extends Zone {
         populationReceived = 0;
         goodsReceived = 0;
     }
+
+    @Override
+    public boolean hasRequiredServices() {
+        return hasSecurity;
+    }
 }

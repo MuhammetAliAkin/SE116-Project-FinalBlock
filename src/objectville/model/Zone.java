@@ -1,6 +1,6 @@
 package objectville.model;
 
-public abstract class Zone extends Cell {
+public abstract class   Zone extends Cell {
     protected int level;
     protected boolean hasSecurity;
     protected boolean hasHealth;
@@ -24,14 +24,14 @@ public abstract class Zone extends Cell {
                 if (getM() >= 1) level = 1;
                 break;
             case 1:
-                if((getM() >= 1) && hasSecurity && hasEducation && hasHealth) level = 2;
+                if((getM() >= 1) && hasRequiredServices()) level = 2;
                 break;
             case 2:
-                if((getM() >= 1) && hasSecurity && hasEducation && hasHealth && canUpgradeToLevel3()) level = 3;
-                else if (!hasSecurity || !hasEducation || !hasHealth) level = 1;
+                if((getM() >= 1) && hasRequiredServices() && canUpgradeToLevel3()) level = 3;
+                else if (!hasRequiredServices()) level = 1;
                 break;
             case 3:
-                if (getM() < 1 || !hasSecurity || !hasHealth || !hasEducation || !canUpgradeToLevel3()) level = 2;
+                if (getM() < 1 || !hasRequiredServices() || !canUpgradeToLevel3()) level = 2;
                 break;
             default:
                 throw new IllegalStateException("Invalid level: " + level);
@@ -95,4 +95,29 @@ public abstract class Zone extends Cell {
     public abstract int getUtilityDemand();
     public abstract boolean canUpgradeToLevel3();
     public abstract void resetPool();
+
+    public int getElectricityReceived() {
+        return electricityReceived;
+    }
+
+    public void setElectricityReceived(int electricityReceived) {
+        this.electricityReceived = electricityReceived;
+    }
+
+    public int getWaterReceived() {
+        return waterReceived;
+    }
+
+    public void setWaterReceived(int waterReceived) {
+        this.waterReceived = waterReceived;
+    }
+
+    public int getInternetReceived() {
+        return internetReceived;
+    }
+
+    public void setInternetReceived(int internetReceived) {
+        this.internetReceived = internetReceived;
+    }
+    public abstract boolean hasRequiredServices();
 }

@@ -50,4 +50,9 @@ public class Industrial extends Zone {
     public int getM() {
         return Math.min(electricityReceived, waterReceived);
     }
+
+    @Override
+    public boolean hasRequiredServices() {
+        return hasSecurity;
+    }
 }
