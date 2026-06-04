@@ -38,15 +38,19 @@ public class ServiceEngine {
                         continue;
                     }
                     Zone zone = (Zone) grid[i][j];
+                    String className = zone.getClass().getSimpleName();
+                    if (className.equals("Housing")) {
+                        className = "House";
+                    }
                     if (serviceType.equals("Security") && !zone.isHasSecurity()){
                         zone.setHasSecurity(true);
-                        System.out.println(zone.getClass().getSimpleName() + " at (" + i + "," + j + ") received security service");
+                        System.out.println(className + " at (" + i + "," + j + ") received security service");
                     } else if (serviceType.equals("Health") && !zone.isHasHealth()){
                         zone.setHasHealth(true);
-                        System.out.println(zone.getClass().getSimpleName() + " at (" + i + "," + j + ") received health service");
+                        System.out.println(className + " at (" + i + "," + j + ") received health service");
                     } else if (serviceType.equals("Education") && !zone.isHasEducation()) {
                         zone.setHasEducation(true);
-                        System.out.println(zone.getClass().getSimpleName() + " at (" + i + "," + j + ") received education service");
+                        System.out.println(className + " at (" + i + "," + j + ") received education service");
                     }
                 }
             }
