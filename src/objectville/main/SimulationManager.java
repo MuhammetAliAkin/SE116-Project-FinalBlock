@@ -25,11 +25,15 @@ public class SimulationManager {
         for (int tick = 1; tick <= totalTicks; tick++) {
             System.out.println("Tick " + tick);
             executeTick();
-            printGrid(tick);
         }
     }
 
     private void executeTick() {
+        forEachZone(z -> z.resetServices());
+        serviceEngine.updateServices(grid);
+        forEachZone(z -> z.resetUtilities());
+        infraManager.distributeInfrastructure(grid);
+        distributeResources();
         forEachZone(z -> {
             int oldLevel = z.getLevel();
             z.tick();
@@ -39,43 +43,22 @@ public class SimulationManager {
             if (className.equals("Housing")) {
                 className = "House";
             }
+
             int output = z.getCurrentOutput();
-            if (output > 0) {
-                String resourceName = "";
-                if (z instanceof Housing) {
-                    resourceName = "population";
-                } else if (z instanceof Industrial) {
-                    resourceName = "goods";
-                } else if (z instanceof Commercial) {
-                    resourceName = "lifestyle";
-                }
-                System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") generated " + output + " " + resourceName);
+            String resourceName = "";
+            if (z instanceof Housing) {
+                resourceName = "population";
+            } else if (z instanceof Industrial) {
+                resourceName = "goods";
+            } else if (z instanceof Commercial) {
+                resourceName = "lifestyle";
             }
+            System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") generated " + output + " " + resourceName);
+
             if (newLevel > oldLevel) {
                 System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") levels up from " + oldLevel + " to " + newLevel);
             } else if (newLevel < oldLevel) {
                 System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") levels down from " + oldLevel + " to " + newLevel);
-            }
-        });
-        serviceEngine.updateServices(grid);
-        forEachZone(z -> z.resetUtilities());
-        forEachCell(c -> { if (c instanceof PowerPlant || c instanceof WaterPumpingStation || c instanceof InternetHub) c.tick(); });
-        infraManager.distributeInfrastructure(grid);
-        distributeResources();
-
-        forEachZone(z -> {
-            int oldLevel = z.getLevel();
-            z.tick();
-            int newLevel = z.getLevel();
-
-            if (newLevel != oldLevel) {
-                String className = z.getClass().getSimpleName();
-                if (className.equals("Housing")) {
-                    className = "House";
-                }
-
-                System.out.println(className + " at (" + z.getX() + "," + z.getY()
-                        + ") levels up from " + oldLevel + " to " + newLevel);
             }
         });
         pooledPopulation = sumOutput(Housing.class);
@@ -92,26 +75,35 @@ public class SimulationManager {
 
         int workerZones = ind.size() + com.size();
         int popPerZone  = workerZones > 0 ? pooledPopulation / workerZones : 0;
-        ind.forEach(z -> {
-            z.setPopulationReceived(popPerZone);
-            if(popPerZone > 0) System.out.println("Industrial at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
-        });
-        com.forEach(z ->{
-            z.setPopulationReceived(popPerZone);
-            if(popPerZone > 0) System.out.println("Commercial at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
-        });
+        ind.forEach(z -> z.setPopulationReceived(popPerZone));
+        com.forEach(z -> z.setPopulationReceived(popPerZone));
 
         int goodsPerCom = com.size() > 0 ? pooledGoods / com.size() : 0;
-        com.forEach(z -> {
-            z.setGoodsReceived(goodsPerCom);
-            if(goodsPerCom > 0) System.out.println("Commercial at (" + z.getX() + "," + z.getY() + ") received " + goodsPerCom + " goods");
-        });
+        com.forEach(z -> z.setGoodsReceived(goodsPerCom));
 
         int lifestylePerHou = hou.size() > 0 ? pooledLifestyle / hou.size() : 0;
-        hou.forEach(z -> {
-            z.setLifestyleReceived(lifestylePerHou);
-            if(lifestylePerHou > 0) System.out.println("House at (" + z.getX() + "," + z.getY() + ") received " + lifestylePerHou + " lifestyle");
-        });
+        hou.forEach(z -> z.setLifestyleReceived(lifestylePerHou));
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                Cell c = grid[i][j];
+                if (c instanceof Zone) {
+                    Zone z = (Zone) c;
+                    String className = z.getClass().getSimpleName();
+                    if (className.equals("Housing")) {
+                        className = "House";
+                    }
+
+                    if (z instanceof Industrial) {
+                        if (popPerZone > 0) System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
+                    } else if (z instanceof Commercial) {
+                        if (popPerZone > 0) System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") received " + popPerZone + " population");
+                        if (goodsPerCom > 0) System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") received " + goodsPerCom + " goods");
+                    } else if (z instanceof Housing) {
+                        if (lifestylePerHou > 0) System.out.println(className + " at (" + z.getX() + "," + z.getY() + ") received " + lifestylePerHou + " lifestyle");
+                    }
+                }
+            }
+        }
     }
 
 
@@ -134,45 +126,13 @@ public class SimulationManager {
 
     private <T extends Zone> int sumOutput(Class<T> type) {
         int total = 0;
-        for (Cell[] row : grid)
-            for (Cell c : row)
-                if (type.isInstance(c)) {
-                    T zone = type.cast(c);
-                    int output = zone.getCurrentOutput();
-                    total += output;
-
-                    if (output > 0) {
-                        String className = zone.getClass().getSimpleName();
-                        if (className.equals("Housing")) {
-                            className = "House";
-                        }
-
-                        String resourceName = "";
-                        if (zone instanceof Housing) {
-                            resourceName = "population";
-                        } else if (zone instanceof Industrial) {
-                            resourceName = "goods";
-                        } else if (zone instanceof Commercial) {
-                            resourceName = "lifestyle";
-                        }
-
-                        System.out.println(className + " at (" + zone.getX() + "," + zone.getY()
-                                + ") generated " + output + " " + resourceName);
-                    }
-                }
-        return total;
-    }
-
-    private void printGrid(int tick) {
-        System.out.println("--- Grid after Tick " + tick + " ---");
         for (Cell[] row : grid) {
-            StringBuilder sb = new StringBuilder();
-            for (Cell c : row) sb.append(c.getType());
-            System.out.println(sb);
+            for (Cell c : row) {
+                if (type.isInstance(c)) {
+                    total += type.cast(c).getCurrentOutput();
+                }
+            }
         }
-        System.out.println("Population pool: " + pooledPopulation
-                + " | Goods pool: " + pooledGoods
-                + " | Lifestyle pool: " + pooledLifestyle);
-        System.out.println();
+        return total;
     }
 }

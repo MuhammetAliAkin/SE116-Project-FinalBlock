@@ -1,6 +1,7 @@
 package objectville.engine;
 
 import objectville.model.Cell;
+import objectville.model.Housing;
 import objectville.model.ServiceProvider;
 import objectville.model.Zone;
 
@@ -33,7 +34,7 @@ public class ServiceEngine {
         for (int i = minRow; i <= maxRow ; i++) {
             for (int j = minCol; j <= maxCol; j++) {
                 if (grid[i][j] instanceof Zone){
-                    int distance = Math.abs(i - startRow) + Math.abs(j - startCol);
+                    double distance = Math.sqrt(Math.pow(i - startRow, 2) + Math.pow(j - startCol, 2));
                     if (distance > radius) {
                         continue;
                     }
@@ -45,10 +46,10 @@ public class ServiceEngine {
                     if (serviceType.equals("Security") && !zone.isHasSecurity()){
                         zone.setHasSecurity(true);
                         System.out.println(className + " at (" + i + "," + j + ") received security service");
-                    } else if (serviceType.equals("Health") && !zone.isHasHealth()){
+                    } else if (serviceType.equals("Health") && !zone.isHasHealth() && zone instanceof Housing){
                         zone.setHasHealth(true);
                         System.out.println(className + " at (" + i + "," + j + ") received health service");
-                    } else if (serviceType.equals("Education") && !zone.isHasEducation()) {
+                    } else if (serviceType.equals("Education") && !zone.isHasEducation() && zone instanceof Housing) {
                         zone.setHasEducation(true);
                         System.out.println(className + " at (" + i + "," + j + ") received education service");
                     }

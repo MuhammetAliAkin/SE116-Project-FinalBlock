@@ -16,7 +16,7 @@ public abstract class   Zone extends Cell {
 
     @Override
     public void tick() {
-        if (electricityReceived == 0 || waterReceived == 0 || (type != 'I' && internetReceived == 0)){
+        if (getM() == 0) {
             level = 0;
             return;
         }
@@ -90,7 +90,10 @@ public abstract class   Zone extends Cell {
         internetReceived += amount;
     }
     public int getM(){
-        return Math.min(electricityReceived,Math.min(waterReceived,internetReceived));
+        if (this.type == 'I') {
+            return Math.min(electricityReceived, waterReceived);
+        }
+        return Math.min(electricityReceived, Math.min(waterReceived, internetReceived));
     }
     public abstract int getCurrentOutput();
     public abstract int getUtilityDemand();
