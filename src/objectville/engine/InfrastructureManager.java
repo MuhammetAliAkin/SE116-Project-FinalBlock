@@ -93,8 +93,16 @@ public class InfrastructureManager {
         if (resourceType == 'T' && zone instanceof Industrial) {
             return 0;
         }
-
-        return zone.getUtilityDemand();
+        int totalDemand = zone.getUtilityDemand();
+        int alreadyReceived = 0;
+        if (resourceType == 'P') {
+            alreadyReceived = zone.getElectricityReceived();
+        } else if (resourceType == 'W') {
+            alreadyReceived = zone.getWaterReceived();
+        } else if (resourceType == 'T') {
+            alreadyReceived = zone.getInternetReceived();
+        }
+        return Math.max(0, totalDemand - alreadyReceived);
     }
 
 
