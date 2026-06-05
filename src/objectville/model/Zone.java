@@ -15,8 +15,11 @@ public abstract class Zone extends Cell {
 
     @Override
     public void tick() {
+        int oldLevel=level;
         if (electricityReceived == 0 || waterReceived == 0 || (type != 'I' && internetReceived == 0)){
             level = 0;
+            if (oldLevel != 0)
+                System.out.println(getClass().getSimpleName() + " at (" + x + "," + y + ") levels down from " + oldLevel + " to 0");
             return;
         }
         switch (level){
@@ -36,6 +39,10 @@ public abstract class Zone extends Cell {
             default:
                 throw new IllegalStateException("Invalid level: " + level);
         }
+        if (level > oldLevel)
+            System.out.println(getClass().getSimpleName() + " at (" + x + "," + y + ") levels up from " + oldLevel + " to " + level);
+        else if (level < oldLevel)
+            System.out.println(getClass().getSimpleName() + " at (" + x + "," + y + ") levels down from " + oldLevel + " to " + level);
     }
     public void resetUtilities() {
         electricityReceived = 0;
